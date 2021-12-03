@@ -127,7 +127,7 @@ export default {
       }
       this.postKeyValueRequest("/file/content",params).then(resp=>{
         if(resp){
-          return 0;
+          this.showDetail(params)
         }
       })
     },
