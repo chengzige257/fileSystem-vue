@@ -78,6 +78,7 @@
           </div>
 
           <el-button type="primary" v-show="PutButtonShow" style="margin-top: 5px" @click="putContent">修改</el-button>
+          <el-button type="primary" v-show="editFile.content!==''" style="margin-top: 5px;float: right" @click="download">下载</el-button>
         </el-main>
       </el-container>
     </el-container>
@@ -120,6 +121,21 @@ export default {
     }
   },
   methods: {
+    download(){
+      var pom = document.createElement("a");
+      pom.setAttribute(
+          "href",
+          "data:text/plain;charset=utf-8," + encodeURIComponent(this.editFile.content)
+      );
+      pom.setAttribute("download", this.editFile.filename);
+      if (document.createEvent) {
+        var event = document.createEvent("MouseEvents");
+        event.initEvent("click", true, true);
+        pom.dispatchEvent(event);
+      } else {
+        pom.click();
+      }
+    },
     putContent(){
       let params={
         id:this.editFile.id,
@@ -131,14 +147,16 @@ export default {
         }
       })
     },
-    formatDateTime(date) {
-    var y = date.substring(0,4);
-    var m = date.substring(5,7);
-    var d = date.substring(8,10);
-    var h = date.substring(11,13);
-    var minute = date.substring(14,16);
-    var second=date.substring(17,19);
-    return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
+    formatDateTime(dateString) {
+      var date = new Date(dateString);
+      // let s = date.toString();
+      var y = date.getFullYear();
+      var m = date.getMonth()+1;
+      var d = date.getDate();
+      var h = date.getHours();
+      var minute = date.getMinutes();
+      var second=date.getSeconds();
+      return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
   },
     changeStatus(writeenable){
     let requestParams={
